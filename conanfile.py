@@ -9,15 +9,16 @@ class DiscordrpcConan(ConanFile):
     url = "https://github.com/AnotherFoxGuy/conan-discord-rpc"
     description = "This is a library for interfacing your game with a locally running Discord desktop client. It's known to work on Windows, macOS, and Linux."
     settings = "os", "compiler", "build_type", "arch"
-
-    def source(self):
-        git = tools.Git()
-        git.clone("https://github.com/discordapp/discord-rpc.git", "v3.4.0")
-
+    exports_sources = [
+        "source/CMakeLists.txt",
+        "source/examples*",
+        "source/include*",
+        "source/src*"
+    ]
     def build(self):
         cmake = CMake(self)
         cmake.definitions['BUILD_EXAMPLES'] = 'OFF'
-        cmake.configure()
+        cmake.configure(source_folder="source")
         cmake.build()
 
     def package(self):
